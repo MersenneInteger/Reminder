@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <time.h>
 
-#define MAX 100
+#define MAX 1000
 
 struct node{
   char *remind;
@@ -26,43 +26,53 @@ void createReminder(){
   scanf("%s", &(new_node)->remind);
 
   first = last = new_node;
-
+  //...
 
 }
-  
-int main(void){
 
-  char *reminder[MAX];
-  int dd, mm, i, j;
-  
-
-  //need to create seperate function for time
+int getMonth(){
+  //return month
   time_t mytime;
   struct tm * timeInfo;
   time(&mytime);
   
   timeInfo = localtime(&mytime);
-  printf("month: %d\n", timeInfo->tm_mon + 1);
+  // printf("month: %d\n", timeInfo->tm_mon + 1);
   //test
-  printf(ctime(&mytime));
+  // printf(ctime(&mytime));
+  return (timeInfo->tm_mon + 1);
 
-  //printf("Reminder: ");
-  //display reminder
+}
+
+int getDay(){
+
+  time_t mytime;
+  struct tm * timeInfo;
+  time(&mytime);
+  timeInfo = localtime(&mytime);
+
+  return (timeInfo->tm_mday);
+}
+
+void deleteNode(){
+
+}
+int main(void){
+
+  char *reminder[MAX];
+  int dd, mm, i, j;
+
+  //testing
+  
+  printf("%d-",getMonth());
+  printf("%d\n", getDay());
+  deleteNode();
 
   //new_node->reminder = "test";
   //new_node->next = first;
   //first = new_node;
 
   createReminder();
-
-  // if(mm == (tm_mon+1))
-  //getDays()
-
-  //printf("%d %d\n", dd, mm);
-
-
-
- 
 
   return 0;
 }
