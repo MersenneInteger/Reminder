@@ -13,6 +13,9 @@ struct node *first = NULL;
 struct node *last = NULL;
 
 void createReminder(){
+
+  char ch;
+  
   struct node *new_node = malloc(sizeof(struct node));
 
   new_node->next = NULL;
@@ -20,7 +23,7 @@ void createReminder(){
   printf("Which month would you like to set a reminder for?\n");
   scanf("%d", &(new_node)->month);
   printf("For which day?\n");
-  scanf("%d\n",&(new_node)->day);
+  scanf("%d",&(new_node)->day);
 
   printf("Enter your message : ");
   scanf("%s", &(new_node)->remind);
@@ -76,3 +79,4 @@ int main(void){
 
   return 0;
 }
+
