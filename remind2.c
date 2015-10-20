@@ -41,6 +41,12 @@ void getCurrentTime(){
 int setDay(){
   printf("For which day? ");
   scanf("%d",&(list1).day);
+
+  if(list1.day <= 0 || list1.day >= 31){
+
+    printf("Incorrect input, enter a date between 1-31: ");
+    scanf("%d",&(list1).day);
+  }
   return (list1.day);
 }
 
@@ -49,7 +55,13 @@ int setMonth(){
   printf("Which month would you like to create a reminder for?\n");
   scanf("%d",&(list1).month);
 
+    if(list1.month <= 0 || list1.month > 12){
+      
+    printf("Incorrect input, enter a month between 1-12: ");
+    scanf("%d",&(list1).month);
+    }
   return (list1.month);
+   
 }
 char *setReminder(){
 
