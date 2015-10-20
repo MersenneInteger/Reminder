@@ -120,10 +120,3 @@ int main(int argc, char *argv[]){
   return 0;
 }
 
-void printRemind(char *a){
-
-  if(*a == '\0')
-    return;
-  printf("%c", *a);
-  printRemind(++a);
-}
