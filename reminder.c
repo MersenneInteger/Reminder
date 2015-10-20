@@ -1,45 +1,15 @@
 #include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include <stdlib.h>
 
-#define MAX 1000
+#define MAX 150
+#define R 365
 
-struct node{
-  char *remind;
+struct list{
   int day, month;
-  struct node *next;
-};
-struct node *first = NULL;
-struct node *last = NULL;
-
-void createReminder(){
-
-  char ch;
- 
-  struct node *new_node = malloc(sizeof(struct node));
-  new_node->next = NULL;
-  
-  if(new_node == NULL){
-    printf("No messages for this day.");
-    return;
-  }
- 
-  printf("Which month would you like to set a reminder for?\n");
-  scanf("%d", &(new_node)->month);
-  printf("For which day?\n");
-  scanf("%d",&(new_node)->day);
-  //repeat:
-  printf("Enter your message : ");
-  scanf("%s", &(new_node)->remind);
-
-  /*  if(strlen(new_node->remind) > 200)
-    printf("A reminder must be less than 200 characters. Please try again.");
-  goto repeat;
-  */
-  first = last = new_node;
-
-}
+  char remind[MAX];
+} list1;
 
 int getMonth(){
   
@@ -49,7 +19,6 @@ int getMonth(){
   timeInfo = localtime(&mytime);
 
   return (timeInfo->tm_mon + 1);
-
 }
 
 int getDay(){
@@ -62,19 +31,58 @@ int getDay(){
   return (timeInfo->tm_mday);
 }
 
-void deleteNode(){
+void getCurrentTime(){
 
+  time_t mytime;
+  time(&mytime);
+  printf(ctime(&mytime));
 }
-int main(void){
 
-  char *reminder[MAX];
-  int dd, mm, i, j;
-  
-  printf("%d-",getMonth());
-  printf("%d\n", getDay());
-  deleteNode();
-  createReminder();
+int setDay(){
+  printf("For which day? ");
+  scanf("%d",&(list1).day);
+
+  if(list1.day <= 0 || list1.day >= 31){
+
+    printf("Incorrect input, enter a date between 1-31: ");
+    scanf("%d",&(list1).day);
+  }
+  return (list1.day);
+}
+
+int setMonth(){
+
+  printf("Which month would you like to create a reminder for?\n");
+  scanf("%d",&(list1).month);
+
+    if(list1.month <= 0 || list1.month > 12){
+      
+    printf("Incorrect input, enter a month between 1-12: ");
+    scanf("%d",&(list1).month);
+    }
+  return (list1.month);
+   
+}
+char *setReminder(){
+
+  // int m = getMonth();
+  // int d = getDay();
+
+  printf("\nEnter your message for %d-%d\n", list1.month, list1.day);
+  scanf("%s", &(list1).remind);
+
+  // printf("%d %d\n%s\n", list1.month, list1.day, list1.remind);
+
+  return (list1.remind);
+}
+int main(int argc, char *argv[]){
+
+  getCurrentTime();
+
+  setMonth();
+  setDay();
+  setReminder();
+
 
   return 0;
 }
-
