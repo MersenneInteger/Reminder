@@ -2,6 +2,7 @@
 #include <string.h>
 #include <time.h>
 #include <stdlib.h>
+#include <stdbool.h>
 #define _GNU_SOURCE
 
 #define MAX 150
@@ -32,11 +33,14 @@ int getDay(){
   return (timeInfo->tm_mday);
 }
 
-void getCurrentTime(){
+char *getCurrentTime(){
 
   time_t mytime;
   time(&mytime);
-  printf(ctime(&mytime));
+  //printf(ctime(&mytime));
+  char *str = (ctime(&mytime));
+  return str;
+  
 }
 
 int setDay(){
@@ -65,51 +69,63 @@ int setMonth(){
   return (list1.month);
    
 }
-char *setReminder(){
+/*
+char *getReminder(int m, int d){
+  
 
 }
-
-void updateRemindArray(char *rArray[], int size){
-
-
-}
+*/
 
 int main(int argc, char *argv[]){
 
-  int day, month, currentDay, nbytes = 150;
+  int day, month, currentDay, bRead;
+  size_t bytes = 150;
   bool exists = true;
-  char *str;
+  char *str, ans = 'n', *time;
   //version 1.1, using binary files instead of linked lists to store and retreive data
 
+  getCurrentTime();
   FILE *file = fopen("reminder.txt", "rb");
+
+  time = getCurrentTime();
+  
   if(file == NULL){
+    
     exists = false;
     file= fopen("reminder.txt","wb");
   }
   if(exists){
-    printf("Would you like to set a reminder (set) or get a reminder(get)?");
-    str = (char *)malloc(nbytes+1);
-    nbytes = getline(&str, &nbytes, stdin);
+    printf("Would you like to set a reminder (y/n)\n?");
+    scanf("%c", &ans);
 
-    if(nbytes == -1)
-      puts("Error");
-    else
+    if(ans == 'y'){
+      printf("Enter your reminder: ");
+      str = (char *)malloc(bytes+1);
+      bRead = getline(&str, &bytes, stdin);
+
+      if(bRead == -1)
+	puts("Error");
+      else
       {
-	puts("You typed :");
-	puts(str);
+	fputs(time, file);
+	fputs(str,file);
       }
+    }
+  }else{
 
-    
+
   }
 
-  getCurrentTime();
+    
+  /*}else{
 
-  setMonth();
-  setDay();
-  setReminder();
+  }
+  */
+
  
 
-
+  //setMonth();
+  //setDay();
   
   return 0;
 }
