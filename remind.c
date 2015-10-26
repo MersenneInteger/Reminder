@@ -76,8 +76,31 @@ void updateRemindArray(char *rArray[], int size){
 
 int main(int argc, char *argv[]){
 
-  
-  int month, day, currentDay;
+  int day, month, currentDay, nbytes = 150;
+  bool exists = true;
+  char *str;
+  //version 1.1, using binary files instead of linked lists to store and retreive data
+
+  FILE *file = fopen("reminder.txt", "rb");
+  if(file == NULL){
+    exists = false;
+    file= fopen("reminder.txt","wb");
+  }
+  if(exists){
+    printf("Would you like to set a reminder (set) or get a reminder(get)?");
+    str = (char *)malloc(nbytes+1);
+    nbytes = getline(&str, &nbytes, stdin);
+
+    if(nbytes == -1)
+      puts("Error");
+    else
+      {
+	puts("You typed :");
+	puts(str);
+      }
+
+    
+  }
 
   getCurrentTime();
 
