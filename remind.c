@@ -2,7 +2,7 @@
 #include <string.h>
 #include <time.h>
 #include <stdlib.h>
-#include <errno.h>
+#define _GNU_SOURCE
 
 #define MAX 150
 #define R 365
@@ -67,11 +67,6 @@ int setMonth(){
 }
 char *setReminder(){
 
-
-  printf("\nEnter your message for %d-%d\n", list1.month, list1.day);
-  scanf("%s", &(list1).remind[0]);
-
-  return (list1.remind[0]);
 }
 
 void updateRemindArray(char *rArray[], int size){
@@ -81,7 +76,7 @@ void updateRemindArray(char *rArray[], int size){
 
 int main(int argc, char *argv[]){
 
-  char *r[R+1];
+  
   int month, day, currentDay;
 
   getCurrentTime();
@@ -89,6 +84,7 @@ int main(int argc, char *argv[]){
   setMonth();
   setDay();
   setReminder();
+ 
 
 
   
