@@ -38,8 +38,8 @@ char *getCurrentTime(){
   time_t mytime;
   time(&mytime);
   //printf(ctime(&mytime));
-  char *str = (ctime(&mytime));
-  return str;
+  char *string = (ctime(&mytime));
+  return string;
   
 }
 
@@ -84,15 +84,15 @@ int main(int argc, char *argv[]){
   char *str, ans = 'n', *time;
   //version 1.1, using binary files instead of linked lists to store and retreive data
 
-  getCurrentTime();
-  FILE *file = fopen("reminder.txt", "rb");
+  //getCurrentTime();
+  FILE *file = fopen("reminder.bin", "rb");
 
   time = getCurrentTime();
   
   if(file == NULL){
     
     exists = false;
-    file= fopen("reminder.txt","wb");
+    file= fopen("reminder.bin","wb");
   }
   if(exists){
     printf("Would you like to set a reminder (y/n)\n?");
@@ -107,26 +107,24 @@ int main(int argc, char *argv[]){
 	puts("Error");
       else
       {
-	fputs(time, file);
-	fputs(str,file);
+	gets(str);
+	int num = strlen(str);
+	fwrite(time,sizeof(char),50, file);
+	fwrite(str,sizeof(char),num,file);
+	puts(str);
       }
     }
-  }else{
-
-
   }
 
-    
   /*}else{
 
   }
   */
 
- 
-
   //setMonth();
   //setDay();
-  
+  fclose(file);
+  free(str);
   return 0;
 }
 
