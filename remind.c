@@ -3,7 +3,7 @@
 #include <time.h>
 #include <stdlib.h>
 #include <stdbool.h>
-#define _GNU_SOURCE
+#include <errno.h>
 
 #define MAX 150
 #define R 365
@@ -78,53 +78,87 @@ char *getReminder(int m, int d){
 
 int main(int argc, char *argv[]){
 
-  int day, month, currentDay, bRead;
-  size_t bytes = 150;
+  int day, month, currentDay;
+  size_t data = 150;
   bool exists = true;
   char *str, ans = 'n', *time;
+  long fileSize;
   //version 1.1, using binary files instead of linked lists to store and retreive data
 
   //getCurrentTime();
   FILE *file = fopen("reminder.bin", "rb");
 
   time = getCurrentTime();
-  
+
   if(file == NULL){
     
     exists = false;
-    file= fopen("reminder.bin","wb");
-  }
-  if(exists){
-    printf("Would you like to set a reminder (y/n)\n?");
-    scanf("%c", &ans);
+    file= fopen("reminder.bin","wb+");
+  
+    if(exists){
+      printf("Would you like to set a reminder (y/n)\n?");
+      scanf("%c", &ans);
 
     if(ans == 'y'){
       printf("Enter your reminder: ");
-      str = (char *)malloc(bytes+1);
-      bRead = getline(&str, &bytes, stdin);
+      str = (char *)malloc(data+1);
+      getline(&str,&data,stdin);
 
-      if(bRead == -1)
-	puts("Error");
-      else
-      {
-	gets(str);
-	int num = strlen(str);
-	fwrite(time,sizeof(char),50, file);
-	fwrite(str,sizeof(char),num,file);
-	puts(str);
-      }
+      //c strings make life so hard
+      fgets(str,150,stdin);
+
+      fwrite(str, sizeof(str[0]),sizeof(str)/sizeof(char),file);
+      int num = strlen(str);
+      
+      fwrite(time,sizeof(char),50, file);
+      fwrite(str,sizeof(str)/sizeof(str[0]),num,file);
+      //confirm string input was read in correctly
+      puts(str);
+       
+      fseek(file, 0, SEEK_END);
+      fileSize = ftell(file);
+
+      rewind(file);
+
+      char *buffer = (char*)malloc(sizeof(char)*fileSize);
+      if(buffer == NULL)
+	perror("Error");
+
+      data = fread(buffer, 1, fileSize, file);
+      if(data != fileSize)
+	perror("Error");
+
+      printf("%s\n", buffer);
+      free(str);
+      free(buffer);
     }
-  }
+   }
+  }else{
+      printf("%s", time);
+      month = setMonth();
+      day = setDay();
 
-  /*}else{
+      fwrite(&month, sizeof(int),1,file);
+      fwrite(&day, sizeof(int),1,file);
 
-  }
-  */
+      printf("Enter your reminder : ");
+      str = (char *)malloc(data+1);
+      getline(&str,&data,stdin);
 
-  //setMonth();
-  //setDay();
+      fgets(str,150,stdin);
+
+      fwrite(str, sizeof(str[0]),sizeof(str)/sizeof(char),file);
+      int num = strlen(str);
+      
+      fwrite(time,sizeof(char),50, file);
+      fwrite(str,sizeof(str)/sizeof(str[0]),num,file);
+
+      puts(str);
+
+    }
+  
   fclose(file);
-  free(str);
+ 
   return 0;
 }
 
