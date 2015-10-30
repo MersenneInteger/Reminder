@@ -2,8 +2,8 @@
 #include <string.h>
 #include <time.h>
 #include <stdlib.h>
-#include <stdbool.h>
 #include <errno.h>
+
 #define MAX 150
 
 struct list{
@@ -103,22 +103,17 @@ int main(int argc, char *argv[]){
       getline(&str,&data,stdin);
       fgets(str,150,stdin);
 
-      //fwrite(str, sizeof(str[0]),sizeof(str),file);
       int num = strlen(str);
 
       fwrite(str,sizeof(str)/sizeof(str[0]),num, file);
       fwrite(time,sizeof(char),50, file);
      
-
       while(!feof(file)){
 	data = fread(buffer, 150, 1, file);
 	printf("%s", buffer);
 
       }
- 
-      //confirm string input was read in correctly
-      //puts(str);
-       
+  
       fseek(file, 0, SEEK_END);
       fileSize = ftell(file);
 
@@ -140,11 +135,11 @@ int main(int argc, char *argv[]){
     }
     exit(1);
   }
+   //need to clean this part up, structure is confused, disorganized but Im learning
 
       month = getMonth();
       day = getDay();
       
-
       //getReminder(month, day);
 
       rewind(file);
@@ -158,7 +153,6 @@ int main(int argc, char *argv[]){
 	exit(1);
       }
 
-      
       fwrite(&month, sizeof(int),1,file);
       fwrite(&day, sizeof(int),1,file);
 
@@ -175,9 +169,6 @@ int main(int argc, char *argv[]){
       fwrite(str,sizeof(str)/sizeof(str[0]),num,file);
 
       puts(str);
-
-  
-  
   
   fclose(file);
  
