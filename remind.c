@@ -4,9 +4,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <errno.h>
-
 #define MAX 150
-#define R 365
 
 struct list{
   int day, month;
@@ -71,6 +69,7 @@ int setMonth(){
 }
 /*
 char *getReminder(int m, int d){
+
   
 
 }
@@ -78,42 +77,47 @@ char *getReminder(int m, int d){
 
 int main(int argc, char *argv[]){
 
-  int day, month, currentDay;
-  size_t data = 150;
-  bool exists = true;
+  int day, month;
+  size_t data;
+  char buffer[150];
   char *str, ans = 'n', *time;
   long fileSize;
-  //version 1.1, using binary files instead of linked lists to store and retreive data
 
-  //getCurrentTime();
-  FILE *file = fopen("reminder.bin", "rb");
+  FILE *file = fopen("reminder.bin", "rb+");
 
   time = getCurrentTime();
+  printf("%s", time);
 
   if(file == NULL){
     
-    exists = false;
-    file= fopen("reminder.bin","wb+");
-  
-    if(exists){
-      printf("Would you like to set a reminder (y/n)\n?");
-      scanf("%c", &ans);
+    file = fopen("reminder.bin","wb+");
+
+    printf("Would you like to set a reminder (y/n)\n?");
+    scanf("%c", &ans);
 
     if(ans == 'y'){
       printf("Enter your reminder: ");
       str = (char *)malloc(data+1);
-      getline(&str,&data,stdin);
-
+      
       //c strings make life so hard
+      getline(&str,&data,stdin);
       fgets(str,150,stdin);
 
-      fwrite(str, sizeof(str[0]),sizeof(str)/sizeof(char),file);
+      //fwrite(str, sizeof(str[0]),sizeof(str),file);
       int num = strlen(str);
-      
+
+      fwrite(str,sizeof(str)/sizeof(str[0]),num, file);
       fwrite(time,sizeof(char),50, file);
-      fwrite(str,sizeof(str)/sizeof(str[0]),num,file);
+     
+
+      while(!feof(file)){
+	data = fread(buffer, 150, 1, file);
+	printf("%s", buffer);
+
+      }
+ 
       //confirm string input was read in correctly
-      puts(str);
+      //puts(str);
        
       fseek(file, 0, SEEK_END);
       fileSize = ftell(file);
@@ -124,20 +128,37 @@ int main(int argc, char *argv[]){
       if(buffer == NULL)
 	perror("Error");
 
-      data = fread(buffer, 1, fileSize, file);
+      data = fread(buffer, 150, fileSize, file);
       if(data != fileSize)
 	perror("Error");
 
       printf("%s\n", buffer);
       free(str);
       free(buffer);
-    }
-   }
-  }else{
-      printf("%s", time);
-      month = setMonth();
-      day = setDay();
 
+    
+    }
+    exit(1);
+  }
+
+      month = getMonth();
+      day = getDay();
+      
+
+      //getReminder(month, day);
+
+      rewind(file);
+      while(!feof(file)){
+	  data = fread(buffer, 150, 1, file);
+	  printf("%s", buffer);
+	}
+
+      if(file == NULL){
+	perror("file not found");
+	exit(1);
+      }
+
+      
       fwrite(&month, sizeof(int),1,file);
       fwrite(&day, sizeof(int),1,file);
 
@@ -155,7 +176,8 @@ int main(int argc, char *argv[]){
 
       puts(str);
 
-    }
+  
+  
   
   fclose(file);
  
