@@ -157,7 +157,6 @@ int main(int argc, char *argv[]){
 	perror("file not found");
 	exit(1);
       }
-
       
       fwrite(&month, sizeof(int),1,file);
       fwrite(&day, sizeof(int),1,file);
