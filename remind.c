@@ -162,6 +162,11 @@ int main(int argc, char *argv[]){
       fwrite(&month, sizeof(int),1,file);
       fwrite(&day, sizeof(int),1,file);
 
+       printf("Would you like to set a reminder (y/n)\n?");
+       scanf("%c", &ans);
+
+      if(ans == 'y'){
+
       printf("Enter your reminder : ");
       str = (char *)malloc(data+1);
       getline(&str,&data,stdin);
@@ -175,7 +180,7 @@ int main(int argc, char *argv[]){
       fwrite(str,sizeof(str)/sizeof(str[0]),num,file);
 
       puts(str);
-
+    }
   
   
   
