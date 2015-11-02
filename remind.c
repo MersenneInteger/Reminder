@@ -69,7 +69,7 @@ int setMonth(){
 }
 
 //getReminder function test
-char *getReminder(int m, int d){
+void *getReminder(int m, int d){
  
   int mm = getMonth;
   int dd = getDay;
@@ -82,19 +82,18 @@ char *getReminder(int m, int d){
     perror("file not found");
     exit(1);
   }
-}
 
   while(!feof(file)){
     bytes = fread(buffer, 150, 1, file);
     while(!found){
       if(getc(file)== d)
 	printf("%s", buffer);
-      else
-	break;
+       else
+      	break;
     }
   }
 
-
+}
 int main(int argc, char *argv[]){
 
   int day, month;
@@ -212,4 +211,5 @@ int main(int argc, char *argv[]){
  
   return 0;
 }
+
 
