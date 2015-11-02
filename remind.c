@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <errno.h>
+#include <ctype.h>
 #define MAX 150
 
 struct list{
@@ -71,11 +72,14 @@ int setMonth(){
 //getReminder function test
 void *getReminder(int m, int d){
  
-  int mm = getMonth;
-  int dd = getDay;
+  int mm,dd;
+  mm = (int)getMonth;
+  dd = (int)getDay;
+  int n;
   size_t bytes;
   char buffer[150];
   bool found = false;
+  char *st;
   FILE *file = fopen("reminder.bin", "rb+");
 
   if(file == NULL){
@@ -86,14 +90,16 @@ void *getReminder(int m, int d){
   while(!feof(file)){
     bytes = fread(buffer, 150, 1, file);
     while(!found){
-      if(getc(file)== d)
+      if(getc(file)== d){
+	if(isdigit(buffer))
+	 strtol(st,&buffer, 10);
 	printf("%s", buffer);
+      }
        else
       	break;
     }
-  }
-
-}
+   }
+ }
 int main(int argc, char *argv[]){
 
   int day, month;
@@ -105,7 +111,7 @@ int main(int argc, char *argv[]){
   FILE *file = fopen("reminder.bin", "rb+");
 
   time = getCurrentTime();
-  printf("%s", time);
+  printf("------%s", time);
 
   if(file == NULL){
     
@@ -122,7 +128,6 @@ int main(int argc, char *argv[]){
       getline(&str,&data,stdin);
       fgets(str,150,stdin);
 
-      //fwrite(str, sizeof(str[0]),sizeof(str),file);
       int num = strlen(str);
 
       fwrite(str,sizeof(str)/sizeof(str[0]),num, file);
@@ -132,7 +137,6 @@ int main(int argc, char *argv[]){
       while(!feof(file)){
 	data = fread(buffer, 150, 1, file);
 	printf("%s", buffer);
-
       }
  
       //confirm string input was read in correctly
@@ -178,8 +182,6 @@ int main(int argc, char *argv[]){
 	  printf("%s", buffer);
 	}
 
-
-      
       fwrite(&month, sizeof(int),1,file);
       fwrite(&day, sizeof(int),1,file);
 
