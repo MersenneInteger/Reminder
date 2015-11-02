@@ -67,13 +67,33 @@ int setMonth(){
   return (list1.month);
    
 }
-/*
+
+//getReminder function test
 char *getReminder(int m, int d){
+ 
+  int mm = getMonth;
+  int dd = getDay;
+  size_t bytes;
+  char buffer[150];
+  bool found = false;
+  FILE *file = fopen("reminder.bin", "rb+");
 
-  
-
+  if(file == NULL){
+    perror("file not found");
+    exit(1);
+  }
 }
-*/
+
+  while(!feof(file)){
+    bytes = fread(buffer, 150, 1, file);
+    while(!found){
+      if(getc(file)== d)
+	printf("%s", buffer);
+      else
+	break;
+    }
+  }
+
 
 int main(int argc, char *argv[]){
 
@@ -145,18 +165,21 @@ int main(int argc, char *argv[]){
       day = getDay();
       
 
-      //getReminder(month, day);
+      getReminder(month, day);
 
+
+      if(file == NULL){
+	perror("file not found");
+	exit(1);
+      }
+      
       rewind(file);
       while(!feof(file)){
 	  data = fread(buffer, 150, 1, file);
 	  printf("%s", buffer);
 	}
 
-      if(file == NULL){
-	perror("file not found");
-	exit(1);
-      }
+
       
       fwrite(&month, sizeof(int),1,file);
       fwrite(&day, sizeof(int),1,file);
@@ -175,10 +198,12 @@ int main(int argc, char *argv[]){
       fwrite(str, sizeof(str[0]),sizeof(str)/sizeof(char),file);
       int num = strlen(str);
       
-      fwrite(time,sizeof(char),50, file);
       fwrite(str,sizeof(str)/sizeof(str[0]),num,file);
+      fwrite(time,sizeof(char),50, file);
 
+      printf("Reminder set: ");
       puts(str);
+      puts(time);
     }
   
   
