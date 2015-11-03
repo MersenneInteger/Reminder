@@ -71,11 +71,7 @@ int setMonth(){
 
 //getReminder function test
 void *getReminder(int m, int d){
- 
-  int mm,dd;
-  mm = (int)getMonth;
-  dd = (int)getDay;
-  int n;
+
   size_t bytes;
   char buffer[150];
   bool found = false;
@@ -111,7 +107,7 @@ int main(int argc, char *argv[]){
   FILE *file = fopen("reminder.bin", "rb+");
 
   time = getCurrentTime();
-  printf("------%s", time);
+  printf("-%s", time);
 
   if(file == NULL){
     
@@ -121,6 +117,9 @@ int main(int argc, char *argv[]){
     scanf("%c", &ans);
 
     if(ans == 'y'){
+      
+      setMonth();    
+      setDay();
       printf("Enter your reminder: ");
       str = (char *)malloc(data+1);
       
@@ -165,8 +164,7 @@ int main(int argc, char *argv[]){
   }
 
       month = getMonth();
-      day = getDay();
-      
+      day = getDay();      
 
       getReminder(month, day);
 
@@ -185,26 +183,31 @@ int main(int argc, char *argv[]){
       fwrite(&month, sizeof(int),1,file);
       fwrite(&day, sizeof(int),1,file);
 
-       printf("Would you like to set a reminder (y/n)\n?");
+       printf("Would you like to set a reminder (y/n)?\n");
        scanf("%c", &ans);
 
+       
       if(ans == 'y'){
 
-      printf("Enter your reminder : ");
-      str = (char *)malloc(data+1);
-      getline(&str,&data,stdin);
+	setMonth();
+       	setDay();
+		
 
-      fgets(str,150,stdin);
+	printf("Enter your reminder : ");
+	str = (char *)malloc(data+1);
+	getline(&str,&data,stdin);
 
-      fwrite(str, sizeof(str[0]),sizeof(str)/sizeof(char),file);
-      int num = strlen(str);
+	fgets(str,150,stdin);
+
+	fwrite(str, sizeof(str[0]),sizeof(str)/sizeof(char),file);
+	int num = strlen(str);
       
-      fwrite(str,sizeof(str)/sizeof(str[0]),num,file);
-      fwrite(time,sizeof(char),50, file);
+	fwrite(str,sizeof(str)/sizeof(str[0]),num,file);
+	fwrite(time,sizeof(char),50, file);
 
-      printf("Reminder set: ");
-      puts(str);
-      puts(time);
+	printf("Reminder set: ");
+	puts(str);
+	puts(time);
     }
   
   
