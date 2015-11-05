@@ -74,7 +74,7 @@ void *getReminder(int m, int d){
 
   size_t bytes;
   char buffer[150];
-  bool found = false;
+  bool found = true;
   char *st;
   FILE *file = fopen("reminder.bin", "rb+");
 
@@ -85,14 +85,17 @@ void *getReminder(int m, int d){
 
   while(!feof(file)){
     bytes = fread(buffer, 150, 1, file);
-    while(!found){
+    while(found){
       if(getc(file)== d){
+	found = false;
 	if(isdigit(buffer))
 	 strtol(st,&buffer, 10);
 	printf("%s", buffer);
       }
-       else
+      else{
       	break;
+	found = false;
+      }
     }
    }
  }
@@ -101,14 +104,18 @@ int main(int argc, char *argv[]){
   int day, month;
   size_t data;
   char buffer[150];
-  char *str, ans = 'n', *time;
+  char *str, ans = 'n', *time, *timeStamp;
   long fileSize;
+  char *input;
 
   FILE *file = fopen("reminder.bin", "rb+");
 
   time = getCurrentTime();
   printf("-%s", time);
+  day = getDay();
+  month = getMonth();
 
+  
   if(file == NULL){
     
     file = fopen("reminder.bin","wb+");
@@ -118,21 +125,25 @@ int main(int argc, char *argv[]){
 
     if(ans == 'y'){
       
-      setMonth();    
-      setDay();
+      month = setMonth();    
+      day = setDay();
+      
+      //fwrite(&month, sizeof(int),1,file);
+      //fwrite(&day, sizeof(int),1,file);
+      //fseek(file, 9, SEEK_SET);
+      
       printf("Enter your reminder: ");
       str = (char *)malloc(data+1);
       
       //c strings make life so hard
       getline(&str,&data,stdin);
       fgets(str,150,stdin);
-
       int num = strlen(str);
+      snprintf(buffer, 150, "%d %d : %s\n", month, day, str); 
 
-      fwrite(str,sizeof(str)/sizeof(str[0]),num, file);
-      fwrite(time,sizeof(char),50, file);
+      fwrite(buffer,sizeof(str)/sizeof(str[0]),num, file);
+      //fwrite(time,sizeof(char),50, file);
      
-
       while(!feof(file)){
 	data = fread(buffer, 150, 1, file);
 	printf("%s", buffer);
@@ -143,7 +154,6 @@ int main(int argc, char *argv[]){
        
       fseek(file, 0, SEEK_END);
       fileSize = ftell(file);
-
       rewind(file);
 
       char *buffer = (char*)malloc(sizeof(char)*fileSize);
@@ -158,14 +168,12 @@ int main(int argc, char *argv[]){
       free(str);
       free(buffer);
 
-    
     }
     exit(1);
   }
 
       month = getMonth();
       day = getDay();      
-
       getReminder(month, day);
 
 
@@ -180,8 +188,9 @@ int main(int argc, char *argv[]){
 	  printf("%s", buffer);
 	}
 
-      fwrite(&month, sizeof(int),1,file);
-      fwrite(&day, sizeof(int),1,file);
+      //fwrite(&month, sizeof(int),1,file);
+      //fwrite(&day, sizeof(int),1,file);
+      //fseek(file, 9, SEEK_SET);
 
        printf("Would you like to set a reminder (y/n)?\n");
        scanf("%c", &ans);
@@ -189,28 +198,26 @@ int main(int argc, char *argv[]){
        
       if(ans == 'y'){
 
-	setMonth();
-       	setDay();
+	month = setMonth();
+       	day = setDay();
 		
-
 	printf("Enter your reminder : ");
-	str = (char *)malloc(data+1);
+	input = (char *)malloc(data+1);
+	
 	getline(&str,&data,stdin);
+	input = fgets(str,150,stdin);
 
-	fgets(str,150,stdin);
+	snprintf(buffer, 150, "%d %d : %s\n", month, day, input); 
 
-	fwrite(str, sizeof(str[0]),sizeof(str)/sizeof(char),file);
-	int num = strlen(str);
+	fwrite(buffer, sizeof(input[0]),sizeof(input)/sizeof(char),file);
+	int num = strlen(input);
       
 	fwrite(str,sizeof(str)/sizeof(str[0]),num,file);
-	fwrite(time,sizeof(char),50, file);
-
-	printf("Reminder set: ");
-	puts(str);
-	puts(time);
+	//fwrite(time,sizeof(char),50, file);
+	printf("Reminder set: \n");
+	//puts(time);
+	puts(buffer);
     }
-  
-  
   
   fclose(file);
  
