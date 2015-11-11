@@ -36,7 +36,6 @@ char *getCurrentTime(){
 
   time_t mytime;
   time(&mytime);
-  //printf(ctime(&mytime));
   char *string = (ctime(&mytime));
   return string;
   
@@ -111,6 +110,7 @@ int main(int argc, char *argv[]){
 
   time = getCurrentTime();
   printf("-%s", time);
+  printf("\n");
   day = getDay();
   month = getMonth();
 
@@ -133,10 +133,15 @@ int main(int argc, char *argv[]){
       getline(&str,&data,stdin);
       fgets(str,150,stdin);
       int num = strlen(str);
-      snprintf(buffer, 150, "%d %d : %s\n", month, day, str); 
-
+      //snprintf(buffer, 150, "%d %d : %s\n", month, day, str);
+      strcat(str, time);
+      snprintf(buffer, 150, "%s\n",str);
       fwrite(buffer,sizeof(str)/sizeof(str[0]),num, file);
-
+      //fseek(file,sizeof(buffer)*sizeof(char), SEEK_END);
+      
+      //snprintf(buffer, 40, "%s\n",time);
+      //fwrite(buffer,sizeof(str)/sizeof(str[0]),num, file);
+     
       while(!feof(file)){
 	data = fread(buffer, 150, 1, file);
 	printf("%s", buffer);
@@ -180,8 +185,8 @@ int main(int argc, char *argv[]){
 	
 	getline(&str,&data,stdin);
 	input = fgets(str,150,stdin);
-	snprintf(buffer, 150, "%d %d : %s\n", month, day, input); 
-
+	//snprintf(buffer, 150, "%d %d : %s\n", month, day, input); 
+        strcat(str, time);
 	fwrite(buffer, sizeof(input[0]),sizeof(input)/sizeof(char),file);
 	int num = strlen(input);
       
@@ -196,5 +201,6 @@ int main(int argc, char *argv[]){
  
   return 0;
 }
+
 
 
