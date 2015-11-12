@@ -87,7 +87,7 @@ void *getReminder(int m, int d){
       if(getc(file)== m){
 	found = false;
 	if(isdigit(buffer))
-	 strtol(st,&buffer, 10);
+	 strtol(st, &buffer, 10);
 	printf("%s", buffer);
       }
       else{
@@ -114,7 +114,7 @@ int main(int argc, char *argv[]){
   day = getDay();
   month = getMonth();
   struct list1;
-  list1.remind[month];
+  
 
   
   if(file == NULL){
@@ -136,8 +136,9 @@ int main(int argc, char *argv[]){
       fgets(str,150,stdin);
       int num = strlen(str);
       strcat(str, time);
-      strcpy(list1.remind[month], str);
-      snprintf(buffer, 150, "%s\n",str);
+      strcpy(&list1.remind[month], str);
+      //snprintf(buffer, 150, "%s\n",str);
+      snprintf(buffer, 150, "%s\n", &list1.remind[month]);
       fwrite(buffer,sizeof(str)/sizeof(str[0]),num, file);
      
       while(!feof(file)){
@@ -181,6 +182,8 @@ int main(int argc, char *argv[]){
 	getline(&str,&data,stdin);
 	input = fgets(str,150,stdin);
         strcat(str, time);
+	strcpy(&list1.remind[month], str);
+	snprintf(buffer, 150, "%s\n", &list1.remind[month]);
 	fwrite(buffer, sizeof(input[0]),sizeof(input)/sizeof(char),file);
 	int num = strlen(input);
       
