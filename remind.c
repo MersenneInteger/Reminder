@@ -5,7 +5,7 @@
 #include <stdbool.h>
 #include <errno.h>
 #include <ctype.h>
-#define MAX 150
+#define MAX 365
 
 struct list{
   int day, month;
@@ -113,6 +113,8 @@ int main(int argc, char *argv[]){
   printf("\n");
   day = getDay();
   month = getMonth();
+  struct list1;
+  list1.remind[month];
 
   
   if(file == NULL){
@@ -134,6 +136,7 @@ int main(int argc, char *argv[]){
       fgets(str,150,stdin);
       int num = strlen(str);
       strcat(str, time);
+      strcpy(list1.remind[month], str);
       snprintf(buffer, 150, "%s\n",str);
       fwrite(buffer,sizeof(str)/sizeof(str[0]),num, file);
      
