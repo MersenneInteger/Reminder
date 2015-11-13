@@ -71,20 +71,22 @@ int setMonth(){
    
 }
 
-void *getReminder(int m, int d){
+void getReminder(int m, int d){
   
   char *st;
   FILE *file = fopen("reminder.bin", "rb+");
+  int line = 2;
 
   if(file == NULL){
     perror("file not found");
     exit(1);
   }
-  
-  while(!feof(file)){
-    data = fread(buffer, 150, 1, file);
-    printf("%s", buffer);
-  }
+
+  for(int i=0; i < line;i++) {
+      st = fgets(buffer, BUFF, file);
+      printf("%s", st);
+    }
+
  }
 
 int main(int argc, char *argv[]){
@@ -115,21 +117,16 @@ int main(int argc, char *argv[]){
       day = setDay();
       printf("Enter your reminder: ");
       str = (char *)malloc(BUFF+1);
- 
+      strcpy(&list1.remind[day], str);
+     
       getline(&str,&data,stdin);
       fgets(str,150,stdin);
-      int num = strlen(str);
       strcat(str, time);
       strcpy(&list1.remind[day], str);
 
       snprintf(buffer, BUFF, "%s\n", &list1.remind[day]);
-      fwrite(buffer,sizeof(str)/sizeof(str[0]),num, file);
-      /*
-      while(!feof(file)){
-	data = fread(buffer, BUFF, 1, file);
-	printf("%s", buffer);
-      }
-      */
+      fwrite(buffer, sizeof(char), sizeof(buffer),file);
+
       printf("Reminder set: \n");
       puts(buffer);
       fseek(file, 0, SEEK_END);
@@ -139,13 +136,14 @@ int main(int argc, char *argv[]){
     }
     exit(1);
   }
-  
+
+
       month = getMonth();
       day = getDay();      
       getReminder(month, day);
       //rewind(file);
       
-      printf("Would you like to set a reminder (y/n)?\n");
+      printf("\nWould you like to set a reminder (y/n)?\n");
       scanf("%c", &ans);
        
       if(ans == 'y'){
@@ -160,10 +158,7 @@ int main(int argc, char *argv[]){
         strcat(str, time);
 	strcpy(&list1.remind[day], str);
 	snprintf(buffer, 150, "%s\n", &list1.remind[day]);
-	fwrite(buffer, sizeof(input[0]),sizeof(input)/sizeof(char),file);
-	int num = strlen(input);
-      
-	//fwrite(str,sizeof(str)/sizeof(str[0]),num,file);
+	fwrite(buffer, sizeof(char),sizeof(buffer), file);
 
 	printf("Reminder set: \n");
 	puts(buffer);
