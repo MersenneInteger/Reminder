@@ -6,6 +6,9 @@
 #include <errno.h>
 #include <ctype.h>
 #define MAX 365
+#define BUFF 150
+size_t data;
+char buffer[BUFF];
 
 struct list{
   int day, month;
@@ -69,10 +72,7 @@ int setMonth(){
 }
 
 void *getReminder(int m, int d){
-
-  size_t bytes;
-  char buffer[150];
-  bool found = true;
+  
   char *st;
   FILE *file = fopen("reminder.bin", "rb+");
 
@@ -80,28 +80,16 @@ void *getReminder(int m, int d){
     perror("file not found");
     exit(1);
   }
-
+  
   while(!feof(file)){
-    bytes = fread(buffer, 150, 1, file);
-    while(found){
-      if(getc(file)== m){
-	found = false;
-	if(isdigit(buffer))
-	 strtol(st, &buffer, 10);
-	printf("%s", buffer);
-      }
-      else{
-      	break;
-	found = false;
-      }
-    }
-   }
+    data = fread(buffer, 150, 1, file);
+    printf("%s", buffer);
+  }
  }
+
 int main(int argc, char *argv[]){
 
   int day, month;
-  size_t data;
-  char buffer[150];
   char *str, ans = 'n', *time, *timeStamp;
   long fileSize;
   char *input;
@@ -113,15 +101,12 @@ int main(int argc, char *argv[]){
   printf("\n");
   day = getDay();
   month = getMonth();
-  struct list1;
-  
 
-  
   if(file == NULL){
     
     file = fopen("reminder.bin","wb+");
 
-    printf("Would you like to set a reminder (y/n)\n?");
+    printf("Would you like to set a reminder (y/n)?\n ");
     scanf("%c", &ans);
 
     if(ans == 'y'){
@@ -129,26 +114,27 @@ int main(int argc, char *argv[]){
       month = setMonth();    
       day = setDay();
       printf("Enter your reminder: ");
-      str = (char *)malloc(data+1);
-      
-      //c strings make life so hard
+      str = (char *)malloc(BUFF+1);
+ 
       getline(&str,&data,stdin);
       fgets(str,150,stdin);
       int num = strlen(str);
       strcat(str, time);
-      strcpy(&list1.remind[month], str);
-      //snprintf(buffer, 150, "%s\n",str);
-      snprintf(buffer, 150, "%s\n", &list1.remind[month]);
+      strcpy(&list1.remind[day], str);
+
+      snprintf(buffer, BUFF, "%s\n", &list1.remind[day]);
       fwrite(buffer,sizeof(str)/sizeof(str[0]),num, file);
-     
+      /*
       while(!feof(file)){
-	data = fread(buffer, 150, 1, file);
+	data = fread(buffer, BUFF, 1, file);
 	printf("%s", buffer);
       }
-       
+      */
+      printf("Reminder set: \n");
+      puts(buffer);
       fseek(file, 0, SEEK_END);
       fileSize = ftell(file);
-      rewind(file);
+      //rewind(file);
       free(str);
     }
     exit(1);
@@ -157,18 +143,8 @@ int main(int argc, char *argv[]){
       month = getMonth();
       day = getDay();      
       getReminder(month, day);
-
-      if(file == NULL){
-	perror("file not found");
-	exit(1);
-      }
-      rewind(file);
+      //rewind(file);
       
-      while(!feof(file)){
-	  data = fread(buffer, 150, 1, file);
-	  printf("%s", buffer);
-	}
-
       printf("Would you like to set a reminder (y/n)?\n");
       scanf("%c", &ans);
        
@@ -177,17 +153,17 @@ int main(int argc, char *argv[]){
 	month = setMonth();
        	day = setDay();	
 	printf("Enter your reminder : ");
-	input = (char *)malloc(data+1);
+	input = (char *)malloc(BUFF+1);
 	
 	getline(&str,&data,stdin);
 	input = fgets(str,150,stdin);
         strcat(str, time);
-	strcpy(&list1.remind[month], str);
-	snprintf(buffer, 150, "%s\n", &list1.remind[month]);
+	strcpy(&list1.remind[day], str);
+	snprintf(buffer, 150, "%s\n", &list1.remind[day]);
 	fwrite(buffer, sizeof(input[0]),sizeof(input)/sizeof(char),file);
 	int num = strlen(input);
       
-	fwrite(str,sizeof(str)/sizeof(str[0]),num,file);
+	//fwrite(str,sizeof(str)/sizeof(str[0]),num,file);
 
 	printf("Reminder set: \n");
 	puts(buffer);
