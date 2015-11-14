@@ -13,7 +13,7 @@ char buffer[BUFF];
 struct list{
   int day, month;
   char remind[MAX];
-} list1;
+}list1;
 
 int getMonth(){
   
@@ -81,12 +81,13 @@ void getReminder(int m, int d){
     perror("file not found");
     exit(1);
   }
-
+  
   for(int i=0; i < line;i++) {
       st = fgets(buffer, BUFF, file);
       printf("%s", st);
     }
-
+  
+  //puts(&list1.remind[d]);
  }
 
 int main(int argc, char *argv[]){
@@ -103,12 +104,14 @@ int main(int argc, char *argv[]){
   printf("\n");
   day = getDay();
   month = getMonth();
+  struct list list1 = *(struct list*)malloc(sizeof(struct list));
+
 
   if(file == NULL){
     
     file = fopen("reminder.bin","wb+");
 
-    printf("Would you like to set a reminder (y/n)?\n ");
+    printf("Would you like to set a reminder (y/n)?\n");
     scanf("%c", &ans);
 
     if(ans == 'y'){
@@ -125,9 +128,10 @@ int main(int argc, char *argv[]){
       strcpy(&list1.remind[day], str);
 
       snprintf(buffer, BUFF, "%s\n", &list1.remind[day]);
-      fwrite(buffer, sizeof(char), sizeof(buffer),file);
+      fwrite(&list1.remind[day], sizeof(char), sizeof(buffer), file);
+      //fwrite(buffer, sizeof(char), sizeof(buffer),file);
 
-      printf("Reminder set: \n");
+      printf("\nReminder set: \n");
       puts(buffer);
       fseek(file, 0, SEEK_END);
       fileSize = ftell(file);
@@ -160,7 +164,7 @@ int main(int argc, char *argv[]){
 	snprintf(buffer, 150, "%s\n", &list1.remind[day]);
 	fwrite(buffer, sizeof(char),sizeof(buffer), file);
 
-	printf("Reminder set: \n");
+	printf("\nReminder set: \n");
 	puts(buffer);
 	free(input);
     }
