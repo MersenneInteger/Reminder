@@ -7,8 +7,9 @@
 #include <assert.h>
 #define MAX 365
 #define BUFF 150
-size_t data;
+
 char buffer[BUFF];
+char *abbMonth(int m);
 
 struct list{
   int day, month;
@@ -82,22 +83,41 @@ int setMonth(){
    
 }
 
-void getReminder(int m, int d){
+void getReminder(char *a, int d){
   
   char *st, *st_copy;
   FILE *file = fopen("reminder.bin", "rb+");
   int line = 2;
+  size_t data;
 
-  
   if(file == NULL){
     perror("file not found");
     exit(1);
   }
+
+
+  /* while(!feof(file)){
+     data = fread(buffer, 150, 1, file);
+     printf("%s", buffer);
+     }*/
+  //rewind(file);
+  
+  /* 
+  while(!feof(file)){
+    for(int i = 0; i < BUFF; i++){
+      st[i] = getc(file);
+      if(st[i] == ':') break;
+    }
+    break;
+  }
+
+  printf("%s", st);
+  */
   
  check:
   for(int i = 0; i < 2; i++){
     st[i] = getc(file);
-    if(st[i] == ':') break;
+    if(st[i] == ' ') break;
   }
 
   int dd = atoi(st);
@@ -115,22 +135,21 @@ void getReminder(int m, int d){
     }else
 	goto check;
   }
-    
+  
 }
-char *abbMonth(int m);
+
 
 int main(int argc, char *argv[]){
 
-  int day, month, stamp;
-  char *str, ans = 'n', *time;
+  int day, month;
+  char *str, ans = 'n', *time, *input, *ab;
   long fileSize;
-  char *input, *ab, *new_str;
+  size_t data;
 
   FILE *file = fopen("reminder.bin", "rb+");
 
   time = getCurrentTime();
-  printf("-%s", time);
-  printf("\n");
+  printf("-%s\n", time);
   day = getDay();
   month = getMonth();
   ab = abbMonth(month);
@@ -151,16 +170,14 @@ int main(int argc, char *argv[]){
       day = setDay();
       printf("Enter your reminder: ");
       str = (char *)malloc(BUFF+1);
-      strcpy(&list1.remind[day], str);
      
       getline(&str,&data,stdin);
       fgets(str,150,stdin);
       strcpy(&list1.remind[day], str);
-      
 
-      snprintf(buffer, BUFF, "%s %d: %s\n", ab,day, &list1.remind[day]);
-      fwrite(&list1.remind[day], sizeof(char), sizeof(buffer), file);
-      //fwrite(buffer, sizeof(char), sizeof(buffer),file);
+      snprintf(buffer, BUFF, "%s %d: %s\n", ab, day, &list1.remind[day]);
+      //fwrite(&list1.remind[day], sizeof(char), sizeof(buffer), file);
+      fwrite(buffer, sizeof(char), sizeof(buffer), file);
       printf("\nReminder set: \n");
       puts(buffer);
       
@@ -173,9 +190,7 @@ int main(int argc, char *argv[]){
   }
 
 
-      month = getMonth();
-      day = getDay();      
-      getReminder(month, day);
+      getReminder(ab, day);
       
       printf("\nWould you like to set a reminder (y/n)?\n");
       scanf("%c", &ans);
@@ -185,10 +200,10 @@ int main(int argc, char *argv[]){
 	month = setMonth();
        	day = setDay();	
 	printf("Enter your reminder : ");
-	input = (char *)malloc(BUFF+1);
+	str = (char *)malloc(BUFF+1);
 	
 	getline(&str,&data,stdin);
-	input = fgets(str,150,stdin);
+        fgets(str,BUFF,stdin);
         strcat(str, time);
 	strcpy(&list1.remind[day], str);
         snprintf(buffer, BUFF, "%s %d: %s\n", ab,day, &list1.remind[day]);
@@ -213,55 +228,42 @@ char *abbMonth(int m){
     
   case 1:
     str = "Jan";
-    return str;
     break;
   case 2:
     str = "Feb";
-    return str;
     break;
   case 3:
     str = "Mar";
-    return str;
     break;
   case 4:
     str = "Apr";
-    return str;
     break;
   case 5:
     str = "May";
-    return str;
     break;
   case 6:
     str = "Jun";
-    return str;
     break;
   case 7:
     str = "Jul";
-    return str;
     break;
   case 8:
     str = "Aug";
-    return str;
     break;
   case 9:
     str = "Sep";
-    return str;
     break;
   case 10:
     str = "Oct";
-    return str;
     break;
   case 11:
     str = "Nov";
-    return str;
     break;
   case 12:
     str = "Dec";
-    return str;
     break;
   default :
     str = "Date not found";
-    return str;
     break;
   
   }
