@@ -95,14 +95,7 @@ void getReminder(char *a, int d){
     exit(1);
   }
 
-
-  /* while(!feof(file)){
-     data = fread(buffer, 150, 1, file);
-     printf("%s", buffer);
-     }*/
-  //rewind(file);
-  
-  /* 
+  /*
   while(!feof(file)){
     for(int i = 0; i < BUFF; i++){
       st[i] = getc(file);
