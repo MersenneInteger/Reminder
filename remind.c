@@ -95,18 +95,11 @@ void getReminder(char *a, int d){
     exit(1);
   }
 
-  /*
   while(!feof(file)){
-    for(int i = 0; i < BUFF; i++){
-      st[i] = getc(file);
-      if(st[i] == ':') break;
-    }
-    break;
+    st_copy = fgets(buffer, BUFF, file);
+    printf("%s", st_copy);
   }
-
-  printf("%s", st);
-  */
-  
+  /*
  check:
   for(int i = 0; i < 2; i++){
     st[i] = getc(file);
@@ -128,7 +121,7 @@ void getReminder(char *a, int d){
     }else
 	goto check;
   }
-  
+  */
 }
 
 
