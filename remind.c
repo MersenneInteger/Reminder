@@ -11,37 +11,37 @@
 char buffer[BUFF];
 char *abbMonth(int m);
 
-struct list{
+struct list{ //struct stores two int values for month and day and a string for reminder to be set
   int day, month;
   char remind[MAX];
-}list1;
+}list1; //create var
 
 
 int getMonth(){
   
-  time_t mytime;
-  struct tm * timeInfo;
-  time(&mytime);
-  timeInfo = localtime(&mytime);
+  time_t mytime; 
+  struct tm * timeInfo; //creat struct to store time
+  time(&mytime); //call time func
+  timeInfo = localtime(&mytime); //store local time in struct
 
-  return (timeInfo->tm_mon + 1);
+  return (timeInfo->tm_mon + 1); //returns the month 
 }
 
 int getDay(){
 
-  time_t mytime;
-  struct tm * timeInfo;
-  time(&mytime);
-  timeInfo = localtime(&mytime);
+  time_t mytime; //creat struct to store time
+  struct tm * timeInfo; //call time func
+  time(&mytime); 
+  timeInfo = localtime(&mytime); //store local time in struct
 
-  return (timeInfo->tm_mday);
+  return (timeInfo->tm_mday); //return day
 }
 
 char *getCurrentTime(){
 
   time_t mytime;
   time(&mytime);
-  char *string = (ctime(&mytime));
+  char *string = (ctime(&mytime)); //store time as a string, includes day and month
   return string;
   
 }
@@ -49,10 +49,10 @@ char *getCurrentTime(){
 char *getCurAbbMonth(){
   char *st;
   time_t mytime;
-  struct tm * timeInfo;
+  struct tm * timeInfo; //create struct to store time info
   time(&mytime);
-  timeInfo = localtime(&mytime);
-  strftime(st, 20, "Month : %h\n",timeInfo);
+  timeInfo = localtime(&mytime); //set local time
+  strftime(st, 20, "Month : %h\n",timeInfo); //stores month abbreviation in st
   return st;
 }
 
