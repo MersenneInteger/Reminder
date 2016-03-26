@@ -58,28 +58,30 @@ char *getCurAbbMonth(){
 
 int setDay(){
   printf("For which day? ");
-  scanf("%d",&(list1).day);
+  scanf("%d",&(list1).day); //add numerical day to list1 struct
 
-  if(list1.day <= 0 || list1.day >= 31){
+  if(list1.day <= 0 || list1.day >= 31){ //range 1-31
 
     printf("Incorrect input, enter a date between 1-31: ");
-    scanf("%d",&(list1).day);
+    scanf("%d",&(list1).day); //retry getting correct input
+    //I need to come back and create validation loop
   }
-  return (list1.day);
+  return (list1.day);//return day as int
 }
 
 int setMonth(){
 
   printf("Which month would you like to create a reminder for?\n");
-  scanf("%d",&(list1).month);
+  scanf("%d",&(list1).month); //add numerical month to list1 struct
 
-    if(list1.month <= 0 || list1.month > 12){
+    if(list1.month <= 0 || list1.month > 12){ //range : 1-12
       
     printf("Incorrect input, enter a month between 1-12: ");
-    scanf("%d",&(list1).month);
-
+    scanf("%d",&(list1).month); //retry getting correct user input
+	//I need to come back and put this all into a loop that only exits once the range is 
+	//satisfied
     }
-  return (list1.month);
+  return (list1.month); //returns month as int to be stored in variable
    
 }
 
@@ -132,53 +134,53 @@ int main(int argc, char *argv[]){
   long fileSize;
   size_t data;
 
-  FILE *file = fopen("reminder.bin", "rb+");
+  FILE *file = fopen("reminder.bin", "rb+"); //open binary file
 
-  time = getCurrentTime();
-  printf("-%s\n", time);
-  day = getDay();
-  month = getMonth();
-  ab = abbMonth(month);
-  struct list list1 = *(struct list*)malloc(sizeof(struct list));
+  time = getCurrentTime(); //set time as a string
+  printf("-%s\n", time); //prints time
+  day = getDay(); //set day as int
+  month = getMonth(); //set month as time
+  ab = abbMonth(month); //set ab as the abbr of month
+  struct list list1 = *(struct list*)malloc(sizeof(struct list)); //create struct to hold day and month
   
   
-  if(file == NULL){
+  if(file == NULL){ //if file does not exist
     
-    file = fopen("reminder.bin","wb+");
+    file = fopen("reminder.bin","wb+"); //open a new binary file
 
     printf("Would you like to set a reminder (y/n)?\n");
-    scanf("%c", &ans);
+    scanf("%c", &ans); //accept input as char
     
 
     if(ans == 'y'){
       
-      month = setMonth();    
-      day = setDay();
+      month = setMonth(); //stores month as int
+      day = setDay(); //stores day as int
       printf("Enter your reminder: ");
-      str = (char *)malloc(BUFF+1);
+      str = (char *)malloc(BUFF+1); //create memory for string with max length of 150
      
-      getline(&str,&data,stdin);
-      fgets(str,150,stdin);
-      strcpy(&list1.remind[day], str);
+      getline(&str,&data,stdin); //read line from std input
+      fgets(str,150,stdin); //get total user input, store in str
+      strcpy(&list1.remind[day], str); //copy str into list1 reminder
 
-      snprintf(buffer, BUFF, "%s %d: %s\n", ab, day, &list1.remind[day]);
+      snprintf(buffer, BUFF, "%s %d: %s\n", ab, day, &list1.remind[day]); // store in buffer
       //fwrite(&list1.remind[day], sizeof(char), sizeof(buffer), file);
-      fwrite(buffer, sizeof(char), sizeof(buffer), file);
-      printf("\nReminder set: \n");
-      puts(buffer);
+      fwrite(buffer, sizeof(char), sizeof(buffer), file); //write to file
+      printf("\nReminder set: \n"); 
+      puts(buffer); //print buffer
       
-      fseek(file, 0, SEEK_END);
-      fileSize = ftell(file);
-      rewind(file);
-      free(str);
+      fseek(file, 0, SEEK_END); //go to end of file
+      fileSize = ftell(file); //get file size
+      rewind(file); //go to the beginning of file
+      free(str); //free memory
     }
-    exit(1);
+    exit(1); //exit program
   }
 
-
-      getReminder(ab, day);
+//if answer on line 151 was anything other than 'y'
+      getReminder(ab, day); //retrieve reminder at date stored in ab and int stored in day
       
-      printf("\nWould you like to set a reminder (y/n)?\n");
+      printf("\nWould you like to set a reminder (y/n)?\n"); 
       scanf("%c", &ans);
        
       if(ans == 'y'){
