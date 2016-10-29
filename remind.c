@@ -6,20 +6,24 @@
 #include <ctype.h>
 #include <assert.h>
 
-
-#define DAYS 365 
+#define DAYS 366 
 #define BUFF 150
 
+int iSIZE;
+
 /***************************/
-char buffer[BUFF];
+char sBuffer[BUFF];
 char *abbMonth(int m);
 
 struct ReminderList{ //struct stores two int values for month and day and a string for reminder to be set
         int day, month;
-        char reminder[DAYS];
+        char reminder[BUFF];
 }List; //create var
 
+struct ReminderList reminderStorage[DAYS];
+
 /***************************/
+void incrementSize(){iSIZE++;}
 
 int getMonth()
 {
@@ -139,23 +143,24 @@ goto check;
 int main(int argc, char *argv[])
 {
 
-        int day, month;
+        int iDay, iMonth;
         char *str, ans = 'n', *time, *input, *ab;
-        long fileSize;
+        long lFileSize;
         size_t data;
 
         FILE *file = fopen("reminder.bin", "rb+"); //open binary file
 
         time = getCurrentTime(); //set time as a string
         printf("-%s\n", time); //prints time
-        day = getDay(); //set day as int
-        month = getMonth(); //set month as time
-        ab = abbMonth(month); //set ab as the abbr of month
-        //struct list list1 = *(struct list*)malloc(sizeof(struct list)); //create struct to hold day and month
+
+        iDay = getDay(); //set day as int
+        iMonth = getMonth(); //set month as string
+        ab = abbMonth(iMonth); //set ab as the abbr of month
+       
         
         if(file == NULL)
         { //if file does not exist
-
+                iSIZE = 0;
                 file = fopen("reminder.bin","wb+"); //open a new binary file
 
                 printf("Would you like to set a reminder (y/n)?\n");
@@ -164,24 +169,29 @@ int main(int argc, char *argv[])
 
                 if(ans == 'y')
                 {
+                        //List = (struct ReminderList)malloc(sizeof());
+                        List.month = setMonth(); //stores month as int
+                        List.day = setDay(); //stores day as int
+                        
 
-                        month = setMonth(); //stores month as int
-                        day = setDay(); //stores day as int
                         printf("Enter your reminder: ");
                         str = (char *)malloc(BUFF+1); //create memory for string with max length of 150
 
                         getline(&str,&data,stdin); //read line from std input
                         fgets(str,150,stdin); //get total user input, store in str
-                        strcpy(&List.reminder[day], str); //copy str into list1 reminder
 
-                        snprintf(buffer, BUFF, "%s %d: %s\n", ab, day, &List.reminder[day]); // store in buffer
-                        //fwrite(&list1.remind[day], sizeof(char), sizeof(buffer), file);
-                        fwrite(buffer, sizeof(char), sizeof(buffer), file); //write to file
-                        printf("\nReminder set: \n"); 
-                        puts(buffer); //print buffer
+                        strcpy(&(*List.reminder), str); //copy str into list1 reminder
+                        iSIZE++;
+                        //snprintf(buffer, BUFF, "%s %d: %s\n", ab, day, &List.reminder[day]); // store in buffer
+                        reminderStorage[iSIZE] = List;
+
+                        printf("Testing: %s\n", reminderStorage[iSIZE].reminder);
+                        fwrite(*reminderStorage[iSIZE],sizeof(char), sizeof(sBuffer), file); //write to file
+                        //printf("\nReminder set: \n"); 
+                        //puts(buffer); //print buffer
 
                         fseek(file, 0, SEEK_END); //go to end of file
-                        fileSize = ftell(file); //get file size
+                        lFileSize = ftell(file); //get file size
                         rewind(file); //go to the beginning of file
                         free(str); //free memory
                 }
@@ -198,26 +208,27 @@ int main(int argc, char *argv[])
         if(ans == 'y')
         {
 
-                month = setMonth();
-                day = setDay();	
+                iMonth = setMonth();
+                iDay = setDay();	
                 printf("Enter your reminder : ");
                 str = (char *)malloc(BUFF+1);
 
                 getline(&str,&data,stdin);
                 fgets(str,BUFF,stdin);
                 strcat(str, time);
-                strcpy(&List.reminder[day], str);
-                snprintf(buffer, BUFF, "%s %d: %s\n", ab,day, &List.reminder[day]);
-                fwrite(buffer, sizeof(char),sizeof(buffer), file);
+
+                strcpy(&List.reminder[iDay], str);
+                snprintf(sBuffer, BUFF, "%s %d: %s\n", ab, iDay, &List.reminder[iDay]);
+                fwrite(sBuffer, sizeof(char),sizeof(sBuffer), file);
 
                 printf("\nReminder set: \n");
-                puts(buffer);
+                puts(sBuffer);
                 free(input);
         }
 
         fclose(file);
 
-
+        
         return 0;
 }
 
