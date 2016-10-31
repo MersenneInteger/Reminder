@@ -121,15 +121,18 @@ int setMonth()
         return month;
 }
 
-void getReminder(FILE *file, char dateHeader[BUFF])
+//void getReminder(FILE *file, char dateHeader[BUFF])
+void getReminder(struct ReminderList List)
 {
+        //List.date ...
+        /*
         file = fopen("reminder.bin", "rb");
         if(file == NULL)
         {
             perror("Error: File could not be opened.");
             exit(EXIT_FAILURE);
         }
-        /*
+        
         while(!feof(file))
         {   
             fgets(sBuffer, BUFF, file);
@@ -158,18 +161,9 @@ int main(int argc, char *argv[])
 
         iDay = getDay(); //set day as int
         iMonth = getMonth(); //set month as string
-        strcpy(ab, abbMonth(iMonth)); //set ab as the abbr of month
-
-        printf("%s\n", ab);
-        printf("%d\n", iDay);
-        sprintf(dateHeader, "%d", iDay);
+        snprintf(List.date, BUFF, "%s %d", abbMonth(iMonth), iDay); 
         
-        strncat(ab, " ", 1); 
-        strncat(ab, dateHeader, BUFF);
-        printf("%s\n", ab);
-
-        strcpy(List.date, ab);
-        printf("%s\n", List.date);
+        printf("testing: %s\n", List.date);
 
         if(file == NULL)
         { //if file does not exist
