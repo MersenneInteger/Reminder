@@ -1,3 +1,3 @@
 # Reminder
-A cli reminder application for linux terminal.
+A reminder application for linux terminal.
 
