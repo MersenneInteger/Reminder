@@ -7,7 +7,7 @@
 #include <assert.h>
 
 /***************************/
-int getMonth()
+int get_month()
 {
 
         time_t mytime; 
@@ -18,7 +18,7 @@ int getMonth()
         return (timeInfo->tm_mon + 1); //returns the month 
 }
 
-int getDay()
+int get_day()
 {
 
         time_t mytime; //creat struct to store time
@@ -29,7 +29,7 @@ int getDay()
         return (timeInfo->tm_mday); //return day
 }
 
-char *getCurrentTime()
+char *get_curr_time()
 {
 
         time_t mytime;
@@ -39,18 +39,7 @@ char *getCurrentTime()
 
 }
 
-char *getCurAbbMonth()
-{
-        char *st;
-        time_t mytime;
-        struct tm * timeInfo; //create struct to store time info
-        time(&mytime);
-        timeInfo = localtime(&mytime); //set local time
-        strftime(st, 20, "Month : %h\n",timeInfo); //stores month abbreviation in st
-        return st;
-}
-
-int setDay()
+int set_day()
 {
         int day;
         printf("For which day? ");
@@ -62,7 +51,7 @@ int setDay()
         return day;
 }
 
-int setMonth()
+int set_month()
 {
         int month;
         printf("Which month would you like to create a reminder for?\n");
@@ -76,6 +65,7 @@ int setMonth()
         }
         return month;
 }
+
 
 int main(int argc, char *argv[])
 {
