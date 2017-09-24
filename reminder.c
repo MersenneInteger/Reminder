@@ -60,8 +60,6 @@ int set_month()
         if(month <= 0 || month > 12) {
                 printf("Incorrect input, enter a month between 1-12: ");
                 scanf("%d", &month);
-                //I need to come back and put this all into a loop that only exits once the range is 
-                //satisfied
         }
         return month;
 }
