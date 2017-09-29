@@ -8,9 +8,9 @@
 #define BUFFER 150
 #define STORAGE_SIZE 1000
 
-char *curr_day;
-char *curr_month;
-char *curr_year;
+FILE *file;
+
+char *tod;
 char month_abb[100];
 int reminder_count;
 char buffer[BUFFER];
@@ -39,3 +39,5 @@ void set_message();
 void read_reminder(FILE *file, struct reminder_list r);
 void write_reminder(FILE *file, struct reminder_list r, char *date, char *message);
 void delete_prev_reminders(FILE *file, struct reminder_list r);
+void sort_reminders(FILE *file, struct reminder_list r);
+void startup();
