@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include "reminder.h"
 
-/******************************************************************/
+/**************F U N C T I O N S***********************************************/
 
 int get_month()
 {
@@ -15,7 +15,7 @@ int get_day()
 
 char *get_month_abb()
 {
-    strftime(month_abb, sizeof(month_abb), "%b", time_info);
+    strftime(month_abb, DATE_LIMIT, "%b", time_info);
     return month_abb;
 }
 
@@ -23,20 +23,19 @@ char *get_curr_time()
 {
     time_info = localtime(&today);
     time(&today);
-    tod = (char *)malloc(sizeof((ctime(&today))));
-    tod = ctime(&today);
+    ctime(&today);
+    tod = malloc(sizeof((ctime(&today))));
+    strftime(tod, DATE_LIMIT, "%a %b %d ", time_info);
     return tod;
 }
 
 int set_day()
 {
-    int day;
+    int day = -1;
     printf("For which day? ");
-    fgets(buffer, sizeof(buffer), stdin);
-    sscanf(buffer, "%d", &day);
       
     while(day < 1 || day > 31){   
-        printf("Incorrect input, enter a date between 1-31: ");
+        printf("Enter a date between 1-31: ");
         fgets(buffer, sizeof(buffer), stdin);
         sscanf(buffer, "%d", &day);
     }
@@ -45,13 +44,11 @@ int set_day()
 
 int set_month()
 {
-    int month;
+    int month = -1;
     printf("Which month would you like to create a reminder for?\n");
-    fgets(buffer, sizeof(buffer), stdin);
-    sscanf(buffer, "%d", &month);
     
     while(month < 1 || month > 12) {
-        printf("Incorrect input, enter a month between 1-12: ");
+        printf("Enter a month between 1-12: ");
         fgets(buffer, sizeof(buffer), stdin);
         sscanf(buffer, "%d", &month);
     }
@@ -59,38 +56,41 @@ int set_month()
 }
 void set_date()
 {
-    int d = get_day();
-    char *m = get_month_abb();
-    snprintf(Reminder.date, sizeof(Reminder.date), "%s %d: ", m, d);
+    snprintf(Reminder.date, sizeof(Reminder.date), "%s", tod);
 }
 void set_message()
 {
     printf("Enter your reminder: \n");
     fgets(buffer, sizeof(buffer), stdin);
-    sscanf(buffer, "%s", Reminder.message);
+    snprintf(Reminder.message, sizeof(Reminder.message), "%s", buffer);
 }
 
-void read_reminder(FILE *file, struct reminder_list r)
-{
-    while(strcmp        
-}
-
-void write_reminder(FILE *file, struct reminder_list r, char *date, char *message)
-{
-    
-}
-
-void delete_prev_reminders(FILE *file, struct reminder_list r)
+void read_reminder()
 {
 
 }
 
-void sort_reminders(FILE *file, struct reminder_list r)
+void write_reminder()
+{
+    /*
+        get length of array storing reminder structs
+        write to next available entry after checking for overflow
+    */
+}
+
+void delete_prev_reminders()
+{
+
+}
+
+void sort_reminders()
 {
 
 }
 void startup()
 {
+    get_curr_time();
+
     file = fopen(".reminders.txt", "a");
     if(file == NULL) {
         fprintf(stderr, "errno :%d\n", errno);
@@ -99,18 +99,13 @@ void startup()
     } 
 }
 
-/******************************************************************/
+/**************** M A I N **************************************************/
 
 int main(int argc, char *argv[])
 {
-    char *curr_time = get_curr_time();
     startup();
 
     printf("%s\n", tod);
-    printf("%s\n", curr_time);
-    printf("%d\n", get_month());
-    printf("%d\n", get_day());
-    printf("%s\n", get_month_abb());
     
     set_day();
     set_date();

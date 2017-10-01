@@ -7,6 +7,7 @@
 
 #define BUFFER 150
 #define STORAGE_SIZE 1000
+#define DATE_LIMIT 50
 
 FILE *file;
 
@@ -25,7 +26,7 @@ struct reminder_list {
 } Reminder;
 
 //arrray of structs to store reminders to write to a file
-struct reminder_list rem_storage[STORAGE_SIZE];
+struct reminder_list rstorage[STORAGE_SIZE];
 
 //gets current month, day, and year
 int get_month();
@@ -36,8 +37,8 @@ int get_reminder_count(FILE *file);
 
 //sets reminder date and message
 void set_message();
-void read_reminder(FILE *file, struct reminder_list r);
-void write_reminder(FILE *file, struct reminder_list r, char *date, char *message);
-void delete_prev_reminders(FILE *file, struct reminder_list r);
-void sort_reminders(FILE *file, struct reminder_list r);
+void read_reminder();
+void write_reminder();
+void delete_prev_reminders();
+void sort_reminders();
 void startup();
