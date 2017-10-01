@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include "reminder.h"
 
-/**************F U N C T I O N S***********************************************/
+/********************************* F U N C T I O N S ********************************/
 
 int get_month()
 {
@@ -33,7 +33,6 @@ int set_day()
 {
     int day = -1;
     printf("For which day? ");
-      
     while(day < 1 || day > 31){   
         printf("Enter a date between 1-31: ");
         fgets(buffer, sizeof(buffer), stdin);
@@ -45,8 +44,6 @@ int set_day()
 int set_month()
 {
     int month = -1;
-    printf("Which month would you like to create a reminder for?\n");
-    
     while(month < 1 || month > 12) {
         printf("Enter a month between 1-12: ");
         fgets(buffer, sizeof(buffer), stdin);
@@ -56,7 +53,16 @@ int set_month()
 }
 void set_date()
 {
-    snprintf(Reminder.date, sizeof(Reminder.date), "%s", tod);
+    int d = set_day();
+    int m = set_month();
+
+    struct tm *future_time;
+    future_time = localtime(&today);
+    future_time->tm_mon = m -1;
+    future_time->tm_mday = d;
+
+    mktime(future_time);
+    strftime(Reminder.date, DATE_LIMIT, "%a %b %d ", future_time);
 }
 void set_message()
 {
@@ -67,15 +73,29 @@ void set_message()
 
 void read_reminder()
 {
-
+    while(fread(&Reminder, sizeof(Reminder), 1, file))
+        if(!strcmp(tod, Reminder.date))
+            printf("%s\n%s\n", Reminder.date, Reminder.message);
 }
 
 void write_reminder()
 {
-    /*
-        get length of array storing reminder structs
-        write to next available entry after checking for overflow
-    */
+    char ans = 'n';
+    printf("Enter a reminder (y/n)? ");
+    scanf("%c", &ans);
+    if(ans == 'y' || ans == 'Y') {
+
+        fclose(file);
+        file = fopen(".reminders.bin", "ab");
+        if(file == NULL) {
+            fprintf(stderr, "errno :%d\n", errno);
+            perror("Error");
+            exit(EXIT_FAILURE);
+        }
+        set_date();
+        set_message();
+        fwrite(&Reminder, sizeof(Reminder), 1, file);
+    } else exit(EXIT_SUCCESS);
 }
 
 void delete_prev_reminders()
@@ -91,7 +111,7 @@ void startup()
 {
     get_curr_time();
 
-    file = fopen(".reminders.txt", "a");
+    file = fopen(".reminders.bin", "rb");
     if(file == NULL) {
         fprintf(stderr, "errno :%d\n", errno);
         perror("Error");
@@ -99,20 +119,17 @@ void startup()
     } 
 }
 
-/**************** M A I N **************************************************/
+/***************************** M A I N *******************************************/
 
 int main(int argc, char *argv[])
 {
     startup();
-
     printf("%s\n", tod);
-    
-    set_day();
-    set_date();
-    set_message();
-    
-    printf("%s\n", Reminder.date);
-    printf("%s\n", Reminder.message);
+
+    read_reminder(); 
+    write_reminder();
+    printf("-------------\n");
+    read_reminder();
 
     fclose(file);
     free(tod);

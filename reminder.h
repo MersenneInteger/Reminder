@@ -13,7 +13,6 @@ FILE *file;
 
 char *tod;
 char month_abb[100];
-int reminder_count;
 char buffer[BUFFER];
 
 time_t today;
@@ -25,15 +24,11 @@ struct reminder_list {
 	char message[BUFFER];
 } Reminder;
 
-//arrray of structs to store reminders to write to a file
-struct reminder_list rstorage[STORAGE_SIZE];
-
 //gets current month, day, and year
 int get_month();
 int get_day();
 char *get_month_abb();
 char *get_curr_time(); 
-int get_reminder_count(FILE *file);
 
 //sets reminder date and message
 void set_message();
