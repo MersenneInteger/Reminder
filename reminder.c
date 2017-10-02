@@ -116,16 +116,17 @@ void delete_prev_reminders(FILE *f)
     file_err_check(file);
     file_err_check(new_file);
 
-    int d = get_day();
-    int m = get_month();
     char tmp[DATE_LIMIT];
+    char tmp2[DATE_LIMIT];
     snprintf(tmp, sizeof(tmp), "%s", tod);
     memmove(tmp, tmp + 4, 10);
-
-    while(fread(&Reminder, sizeof(Reminder), 1, file))
-        if(strcmp(tmp, Reminder.date) > 0)
-            fwrite(&Reminder.date, sizeof(Reminder), 1, new_file);
     
+    while(fread(&Reminder, sizeof(Reminder), 1, file)) {
+        snprintf(tmp2, sizeof(tmp2), "%s", Reminder.date);
+        memmove(tmp2, tmp2+4, 10);
+        if(strcmp(tmp, tmp2) <= 0)
+            fwrite(&Reminder.date, sizeof(Reminder), 1, new_file);
+    } 
     int rem_err = remove(".reminders.bin");
     if(rem_err) {
         perror("file removal failure");
@@ -151,7 +152,7 @@ void startup()
 int main(int argc, char **argv)
 {
     startup();
-    printf("%s\n", tod);
+    printf("%s\n----------\n", tod);
     read_reminder(); 
     write_reminder();
     delete_prev_reminders(file);
