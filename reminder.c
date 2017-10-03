@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include "reminder.h"
-
 /********************************* F U N C T I O N S ********************************/
 
 int get_month()
@@ -53,8 +52,8 @@ int set_month()
 }
 void set_date()
 {
-    int d = set_day();
     int m = set_month();
+    int d = set_day();
 
     struct tm *future_time;
     future_time = localtime(&today);
@@ -108,10 +107,10 @@ void write_reminder()
     } else return;
 }
 
-void delete_prev_reminders(FILE *f)
+void delete_prev_reminders()
 {
-    fclose(f);
-    f = fopen(".reminders.bin", "rb+");
+    fclose(file);
+    file = fopen(".reminders.bin", "rb+");
     FILE *new_file = fopen(".temp.bin", "ab");
     file_err_check(file);
     file_err_check(new_file);
@@ -137,7 +136,11 @@ void delete_prev_reminders(FILE *f)
         perror("rename failed");
         return;
     }
-    fclose(new_file);
+}
+
+void sort_reminders()
+{
+
 }
 
 void startup()
@@ -155,7 +158,7 @@ int main(int argc, char **argv)
     printf("%s\n----------\n", tod);
     read_reminder(); 
     write_reminder();
-    delete_prev_reminders(file);
+    delete_prev_reminders();
 
     fclose(file);
     free(tod);

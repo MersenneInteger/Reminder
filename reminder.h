@@ -33,5 +33,6 @@ char *get_curr_time();
 void set_message();
 void read_reminder();
 void write_reminder();
-void delete_prev_reminders(FILE *file);
+void delete_prev_reminders();
+void sort_reminders();
 void startup();
